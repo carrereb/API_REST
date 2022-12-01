@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from chargepoints import views
 
-from chargepoints.views import ChargepointViewsetGet, CustomerViewsetGet, ChargepointViewsetPost, CustomerViewsetPost, ChargepointViewsetDelete
+from chargepoints.views import ChargepointViewsetGet, CustomerViewsetGet
+from chargepoints.views import ChargepointViewsetPost, CustomerViewsetPost
+from chargepoints.views import ChargepointViewsetDelete, CustomerViewsetDelete
 
 router = routers.SimpleRouter()
 router.register('chargepoint/get', ChargepointViewsetGet, basename='chargepoint')
@@ -26,16 +27,10 @@ router.register('chargepoint/post', ChargepointViewsetPost, basename='chargepoin
 router.register('chargepoint/delete', ChargepointViewsetDelete, basename='chargepoint')
 router.register('customers/get', CustomerViewsetGet, basename='customers')
 router.register('customers/post', CustomerViewsetPost, basename='customers')
+router.register('customers/delete', CustomerViewsetDelete, basename='customers')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('', include(router.urls)),
-    # path('api/chargepoint/', views.ChargepointAPIView.as_view()),
-    # path('api/customer/', views.CustomerAPIView.as_view()),
-    # path('chargepoint/get/', views.chargepoint),
-    # path('chargepoint/get/<int:id>/', views.chargepoint_id),
-    # path('chargepoint/post/', views.chargepoint_post),
-    # path('customers/get/', views.customers),
-    # path('customers/get/<int:id>/', views.customers_id),
 ]
