@@ -1,4 +1,5 @@
 from django.shortcuts import render
+import json
 from django.http import HttpResponse
 from chargepoints.models import Chargepoint, Customer
 from django.shortcuts import render
@@ -13,25 +14,28 @@ def ChargepointToDictionary(chargepoint):
     output["id"] = chargepoint.id
     output["name"] = chargepoint.name
     output["number_of_chargepoint"] = chargepoint.number_of_chargepoint
-    output["max_power"] = chargepoint.max_power_w
+    output["max_power_w"] = chargepoint.max_power_w
 
     return output
 
 def chargepoint(request):
-    # Multiple Chargepoints
-    chargepoints = Chargepoint.objects.all()
-    tempChargepoints = []
+    if request.method == 'GET':
+        # Multiple Chargepoints
+        chargepoints = Chargepoint.objects.all()
+        tempChargepoints = []
 
-    for i in range(len(chargepoints)):
-        tempChargepoints.append(ChargepointToDictionary(chargepoints[i])) # Converting `QuerySet` to a Python Dictionary
+        for i in range(len(chargepoints)):
+            tempChargepoints.append(ChargepointToDictionary(chargepoints[i])) # Converting `QuerySet` to a Python Dictionary
 
-    chargepoints = tempChargepoints
+        chargepoints = tempChargepoints
 
-    data = {
-        "chargepoints": chargepoints
-    }
+        data = {
+            "chargepoints": chargepoints
+        }
 
-    return JsonResponse(data)
+        return JsonResponse(data)
+    else:
+        return JsonResponse(tutorial_serializer.errors, status=status.HTTP_405_BAD_REQUEST)
 
 def chargepoint_id(request, id):
     # Single Chargepoint
@@ -92,3 +96,12 @@ def customers_id(request, id):
     }
 
     return JsonResponse(data)
+
+def chargepoint_post(request):
+    chargepoints = json.loads(request.body)
+    for chargepoint in chargepoints:
+        data = Chargepoint()
+        data.name = chargepoint["name"]
+        data.number_of_chargepoint = chargepoint["number_of_chargepoint"]
+        data.max_power_w = chargepoint["max_power_w"]
+        data.save()

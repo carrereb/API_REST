@@ -11,3 +11,4 @@ To help me understand this framework better, I found :
     + to set up the API : https://openclassrooms.com/fr/courses/7192416-mettez-en-place-une-api-avec-django-rest-framework
 - To understand the json display : https://www.delftstack.com/howto/django/django-create-json-response/
 
+Now, the difficulty is to understang how can I import a json file for the POST request.
