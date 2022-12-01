@@ -17,23 +17,11 @@ def ChargepointToDictionary(chargepoint):
 
     return output
 
-def CustomerToDictionary(chargepoint):
-    """
-    A utility function to convert object of type Blog to a Python Dictionary
-    """
-    output = {}
-    output["id"] = chargepoint.id
-    output["name"] = chargepoint.name
-    # output["chargepoint"] = chargepoint.chargepoint
-    output["total_payed"] = chargepoint.total_payed
-
-    return output
-
 def chargepoint(request):
-    # Single Blog
+    # Single Chargepoint
     chargepoint = Chargepoint.objects.get(id = 1)
 
-    # Multiple Blogs
+    # Multiple Chargepoints
     chargepoints = Chargepoint.objects.all()
     tempChargepoints = []
 
@@ -46,17 +34,29 @@ def chargepoint(request):
     chargepoints = tempChargepoints
 
     data = {
-        "chargepoint": chargepoint,
+        # "chargepoint": chargepoint,
         "chargepoints": chargepoints
     }
 
     return JsonResponse(data)
 
+def CustomerToDictionary(chargepoint):
+    """
+    A utility function to convert object of type Blog to a Python Dictionary
+    """
+    output = {}
+    output["id"] = chargepoint.id
+    output["name"] = chargepoint.name
+    output["chargepoint"] = chargepoint.chargepoint
+    output["total_payed"] = chargepoint.total_payed
+
+    return output
+
 def customers(request):
-    # Single Blog
+    # Single Customer
     customer = Customer.objects.get(id = 1)
 
-    # Multiple Blogs
+    # Multiple Customers
     customers = Customer.objects.all()
     tempCustomers = []
 
@@ -64,12 +64,14 @@ def customers(request):
     customer = CustomerToDictionary(customer)
 
     for i in range(len(customers)):
-        tempCustomers.append(CustomerToDictionary(customers[i])) # Converting `QuerySet` to a Python Dictionary
+        buffer = CustomerToDictionary(customers[i])
+        buffer["chargepoint"] = ChargepointToDictionary(buffer["chargepoint"])
+        tempCustomers.append(buffer) # Converting `QuerySet` to a Python Dictionary
 
     customers = tempCustomers
 
     data = {
-        "customer": customer,
+        # "customer": customer,
         "customers": customers
     }
 

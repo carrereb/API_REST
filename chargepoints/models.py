@@ -7,5 +7,5 @@ class Chargepoint(models.Model):
 
 class Customer(models.Model):
     name = models.fields.CharField(max_length=100)
-    # chargepoint = ...
+    chargepoint = models.ForeignKey(Chargepoint, null=True, on_delete=models.CASCADE)
     total_payed = models.fields.FloatField()
