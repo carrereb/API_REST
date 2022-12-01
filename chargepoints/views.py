@@ -1,9 +1,7 @@
-from django.shortcuts import render
-import json
-from django.http import HttpResponse
 from chargepoints.models import Chargepoint, Customer
 from django.shortcuts import render
 from django.http import JsonResponse
+from rest_framework.parsers import JSONParser 
 
 
 def ChargepointToDictionary(chargepoint):
@@ -34,8 +32,8 @@ def chargepoint(request):
         }
 
         return JsonResponse(data)
-    else:
-        return JsonResponse(tutorial_serializer.errors, status=status.HTTP_405_BAD_REQUEST)
+    # else:
+    #     return JsonResponse(tutorial_serializer.errors, status=status.HTTP_405_BAD_REQUEST)
 
 def chargepoint_id(request, id):
     # Single Chargepoint
@@ -98,10 +96,29 @@ def customers_id(request, id):
     return JsonResponse(data)
 
 def chargepoint_post(request):
-    chargepoints = json.loads(request.body)
+    chargepoints = JSONParser().parse(request)
     for chargepoint in chargepoints:
         data = Chargepoint()
         data.name = chargepoint["name"]
         data.number_of_chargepoint = chargepoint["number_of_chargepoint"]
         data.max_power_w = chargepoint["max_power_w"]
         data.save()
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from chargepoints.serializers import ChargepointSerializer, CustomerSerializer
+ 
+class ChargepointAPIView(APIView):
+ 
+    def get(self, *args, **kwargs):
+        chargepoints = Chargepoint.objects.all()
+        serializer = ChargepointSerializer(chargepoints, many=True)
+        return Response(serializer.data)
+
+class CustomerAPIView(APIView):
+ 
+    def get(self, *args, **kwargs):
+        customers = Customer.objects.all()
+        serializer = CustomerSerializer(customers, many=True)
+        return Response(serializer.data)

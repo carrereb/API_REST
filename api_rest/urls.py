@@ -14,11 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
 from chargepoints import views
+
+router = routers.SimpleRouter()
+router.register('category', ChargepointViewset, basename='category')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/', include(router.urls)),
+    # path('api/chargepoint/', views.ChargepointAPIView.as_view()),
+    # path('api/customer/', views.CustomerAPIView.as_view()),
     path('chargepoint/get/', views.chargepoint),
     path('chargepoint/get/<int:id>/', views.chargepoint_id),
     path('chargepoint/post/', views.chargepoint_post),
