@@ -1,3 +1,16 @@
 {
-    
+    "chargepoints": [
+        {
+            "id": 1,
+            "name": "name_chargepoint_1",
+            "number of chargepoint": 12,
+            "max power": 22.1
+        },
+        {
+            "id": 2,
+            "name": "name_chargepoint_2",
+            "number of chargepoint": 4,
+            "max power": 11.2
+        }
+    ]
 }
