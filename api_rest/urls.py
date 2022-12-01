@@ -20,5 +20,7 @@ from chargepoints import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('chargepoint/get/', views.chargepoint),
+    path('chargepoint/get/<int:id>/', views.chargepoint_id),
     path('customers/get/', views.customers),
+    path('customers/get/<int:id>/', views.customers_id),
 ]

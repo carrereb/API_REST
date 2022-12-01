@@ -18,15 +18,9 @@ def ChargepointToDictionary(chargepoint):
     return output
 
 def chargepoint(request):
-    # Single Chargepoint
-    chargepoint = Chargepoint.objects.get(id = 1)
-
     # Multiple Chargepoints
     chargepoints = Chargepoint.objects.all()
     tempChargepoints = []
-
-    # Converting `QuerySet` to a Python Dictionary
-    chargepoint = ChargepointToDictionary(chargepoint)
 
     for i in range(len(chargepoints)):
         tempChargepoints.append(ChargepointToDictionary(chargepoints[i])) # Converting `QuerySet` to a Python Dictionary
@@ -34,11 +28,25 @@ def chargepoint(request):
     chargepoints = tempChargepoints
 
     data = {
-        # "chargepoint": chargepoint,
         "chargepoints": chargepoints
     }
 
     return JsonResponse(data)
+
+def chargepoint_id(request, id):
+    # Single Chargepoint
+    chargepoint = Chargepoint.objects.get(id = id)
+
+    # Converting `QuerySet` to a Python Dictionary
+    chargepoint = ChargepointToDictionary(chargepoint)
+
+    data = {
+        "chargepoint": chargepoint
+    }
+
+    return JsonResponse(data)
+
+
 
 def CustomerToDictionary(chargepoint):
     """
@@ -53,15 +61,9 @@ def CustomerToDictionary(chargepoint):
     return output
 
 def customers(request):
-    # Single Customer
-    customer = Customer.objects.get(id = 1)
-
     # Multiple Customers
     customers = Customer.objects.all()
     tempCustomers = []
-
-    # Converting `QuerySet` to a Python Dictionary
-    customer = CustomerToDictionary(customer)
 
     for i in range(len(customers)):
         buffer = CustomerToDictionary(customers[i])
@@ -73,6 +75,20 @@ def customers(request):
     data = {
         # "customer": customer,
         "customers": customers
+    }
+
+    return JsonResponse(data)
+
+def customers_id(request, id):
+    # Single Customer
+    customer = Customer.objects.get(id = id)
+
+    # Converting `QuerySet` to a Python Dictionary
+    customer = CustomerToDictionary(customer)
+    customer["chargepoint"] = ChargepointToDictionary(customer["chargepoint"])
+
+    data = {
+        "customer": customer
     }
 
     return JsonResponse(data)
