@@ -1,12 +1,12 @@
 # API_REST
 
-## Recherche de liens pour avancer le projet
+## Search for links to advance the project
 
-La principale difficulté est de comprendre comment fonctionne Django car je n'ai jamais utilisé ce framework.  
-Pour m'aider à mieux comprendre ce framework, j'ai trouvé :
+The main difficulty is to understand how Django works because I never used this framework.  
+To help me understand this framework better, I found :
 
-- La documentation de Django : https://docs.djangoproject.com/en/4.1/
-- Des tutoriels Openclassrooms :
-    + pour comprendre le fonctionnement de Django : https://openclassrooms.com/fr/courses/7172076-debutez-avec-le-framework-django
-    + pour mettre en place l'API : https://openclassrooms.com/fr/courses/7192416-mettez-en-place-une-api-avec-django-rest-framework
+- Django documentation : https://docs.djangoproject.com/en/4.1/
+- Tutorials on Openclassrooms :
+    + to understand how Django works : https://openclassrooms.com/fr/courses/7172076-debutez-avec-le-framework-django
+    + to set up the API : https://openclassrooms.com/fr/courses/7192416-mettez-en-place-une-api-avec-django-rest-framework
 
