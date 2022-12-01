@@ -1,6 +1,6 @@
 # API_REST
 
-## Search for links to advance the project
+## advanced of the project
 
 The main difficulty is to understand how Django works because I never used this framework.  
 To help me understand this framework better, I found :
@@ -11,4 +11,10 @@ To help me understand this framework better, I found :
     + to set up the API : https://openclassrooms.com/fr/courses/7192416-mettez-en-place-une-api-avec-django-rest-framework
 - To understand the json display : https://www.delftstack.com/howto/django/django-create-json-response/
 
-Now, the difficulty is to understang how can I import a json file for the POST request.
+Now, the difficulty is to understang how can I import a json file for the POST request.  
+  
+I found a way to do that using Django REST Framework and I change the structure of my code to adapt it to the framework.  
+  
+Now, I have two difficulties :
+- create the client for the chargepoint giving in teh URL
+- make that each URL use an only one method (GET, POST or DELETE)
