@@ -18,11 +18,14 @@ from django.urls import path, include
 from rest_framework import routers
 from chargepoints import views
 
-from chargepoints.views import ChargepointViewsetGet, CustomerViewsetGet
+from chargepoints.views import ChargepointViewsetGet, CustomerViewsetGet, ChargepointViewsetPost, CustomerViewsetPost, ChargepointViewsetDelete
 
 router = routers.SimpleRouter()
 router.register('chargepoint/get', ChargepointViewsetGet, basename='chargepoint')
+router.register('chargepoint/post', ChargepointViewsetPost, basename='chargepoint')
+router.register('chargepoint/delete', ChargepointViewsetDelete, basename='chargepoint')
 router.register('customers/get', CustomerViewsetGet, basename='customers')
+router.register('customers/post', CustomerViewsetPost, basename='customers')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

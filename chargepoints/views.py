@@ -1,8 +1,8 @@
 from chargepoints.models import Chargepoint, Customer
-from django.shortcuts import render
-from django.http import JsonResponse
-from rest_framework.parsers import JSONParser 
-from rest_framework.viewsets import ReadOnlyModelViewSet
+# from django.shortcuts import render
+from django.http import JsonResponse, HttpResponseBadRequest
+# from rest_framework.parsers import JSONParser 
+from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from chargepoints.serializers import ChargepointSerializer, CustomerSerializer
@@ -27,12 +27,52 @@ class ChargepointViewsetGet(ReadOnlyModelViewSet):
             queryset = queryset.filter(chargepoint_id=chargepoint_id)
         return queryset
 
+class ChargepointViewsetPost(ModelViewSet):
+
+    serializer_class = ChargepointSerializer
+    queryset = Chargepoint.objects.all()
+
+    # def get_queryset(self):
+    #     return HttpResponseBadRequest("Erreur 405")
+        # queryset = Chargepoint.objects.all()
+
+        # chargepoint_id = self.request.GET.get('chargepoint_id')
+        # if chargepoint_id is not None:
+        #     queryset = queryset.filter(chargepoint_id=chargepoint_id)
+    #     # return queryset
+
+    # def post(self, request, *args, **kwargs):
+    #     self.queryset = Chargepoint.objects.all()
+    #     if request.method == 'POST':
+    #         data = {
+    #             'name': request.data['name'],
+    #             'number_of_chargepoint': request.data['number_of_chargepoint'],
+    #             'max_power_w': request.data['max_power_w'],
+    #         }
+    #     serializer = ChargepointSerializer(data=data)
+
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     else:
+    #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 class CustomerAPIView(APIView):
  
     def get(self, *args, **kwargs):
         customers = Customer.objects.all()
         serializer = CustomerSerializer(customers, many=True)
         return Response(serializer.data)
+
+class CustomerViewsetPost(ModelViewSet):
+
+    serializer_class = CustomerSerializer
+    queryset = Customer.objects.all()
+
+    # def get_queryset(self):
+    #     return HttpResponseBadRequest("Erreur 405")
 
 class CustomerViewsetGet(ReadOnlyModelViewSet):
 
