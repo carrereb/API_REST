@@ -18,18 +18,21 @@ from django.urls import path, include
 from rest_framework import routers
 from chargepoints import views
 
+from chargepoints.views import ChargepointViewsetGet, CustomerViewsetGet
+
 router = routers.SimpleRouter()
-router.register('category', ChargepointViewset, basename='category')
+router.register('chargepoint/get', ChargepointViewsetGet, basename='chargepoint')
+router.register('customers/get', CustomerViewsetGet, basename='customers')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('api/', include(router.urls)),
+    path('', include(router.urls)),
     # path('api/chargepoint/', views.ChargepointAPIView.as_view()),
     # path('api/customer/', views.CustomerAPIView.as_view()),
-    path('chargepoint/get/', views.chargepoint),
-    path('chargepoint/get/<int:id>/', views.chargepoint_id),
-    path('chargepoint/post/', views.chargepoint_post),
-    path('customers/get/', views.customers),
-    path('customers/get/<int:id>/', views.customers_id),
+    # path('chargepoint/get/', views.chargepoint),
+    # path('chargepoint/get/<int:id>/', views.chargepoint_id),
+    # path('chargepoint/post/', views.chargepoint_post),
+    # path('customers/get/', views.customers),
+    # path('customers/get/<int:id>/', views.customers_id),
 ]
