@@ -16,5 +16,9 @@ Now, the difficulty is to understang how can I import a json file for the POST r
 I found a way to do that using Django REST Framework and I change the structure of my code to adapt it to the framework.  
   
 Now, I have two difficulties :
-- create the client for the chargepoint giving in teh URL
+- create the client for the chargepoint giving in the URL
 - make that each URL use an only one method (GET, POST or DELETE)
+
+I decided to use netcat and telnet to test my POST and DELETE requests.  
+I modified my code with the help of the website https://www.django-rest-framework.org/tutorial/3-class-based-views/  
+This allowed me to better understand how I can manage the different requests.  
