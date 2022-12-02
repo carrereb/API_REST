@@ -1,4 +1,4 @@
-DELETE /chargepoint/post/ HTTP/1.0
+POST /chargepoint/post/ HTTP/1.0
 Content-Type: application/json
 Content-Length: 70
 

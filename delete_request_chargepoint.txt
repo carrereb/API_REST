@@ -1,0 +1,2 @@
+DELETE /chargepoint/delete/10/ HTTP/1.1
+
