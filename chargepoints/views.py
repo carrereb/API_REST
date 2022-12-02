@@ -6,20 +6,13 @@ from chargepoints.serializers import ChargepointSerializer, CustomerSerializer
 from rest_framework import status
 
 
-class ChargepointAPIView(APIView):
- 
-    def get(self, *args, **kwargs):
-        chargepoints = Chargepoint.objects.all()
-        serializer = ChargepointSerializer(chargepoints, many=True)
-        return Response(serializer.data)
 
 class ChargepointViewsetGet(APIView):
 
-    def get(self, request):
-        chargepoint_id = self.request.GET.get('chargepoint_id')
+    def get(self, request, id=None):
         data = Chargepoint.objects.all()
-        if chargepoint_id is not None:
-            data = data.filter(chargepoint_id=chargepoint_id)
+        if id is not None:
+            data = data.filter(id=id)
         serializer = ChargepointSerializer(data, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -29,6 +22,7 @@ class ChargepointViewsetGet(APIView):
     
     def delete(self, request):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
 class ChargepointViewsetPost(APIView):
 
@@ -48,44 +42,63 @@ class ChargepointViewsetPost(APIView):
 
 class ChargepointViewsetDelete(APIView):
 
+    def get(self, request, id):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def post(self, request, id):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
     def delete(self, request, id):
         data = Chargepoint.objects.get(id=id)
         data.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class CustomerAPIView(APIView):
- 
-    def get(self, *args, **kwargs):
-        customers = Customer.objects.all()
-        serializer = CustomerSerializer(customers, many=True)
-        return Response(serializer.data)
 
-class CustomerViewsetPost(ModelViewSet):
+class CustomerViewsetGet(APIView):
 
-    serializer_class = CustomerSerializer
-    queryset = Customer.objects.all()
+    def get(self, request, id=None):
+        data = Customer.objects.all()
+        if id is not None:
+            data = data.filter(id=id)
+        serializer = CustomerSerializer(data, many=True)
 
-class CustomerViewsetGet(ReadOnlyModelViewSet):
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    def delete(self, request):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    serializer_class = CustomerSerializer
 
-    def get_queryset(self):
-        queryset = Customer.objects.all()
+class CustomerViewsetPost(APIView):
 
-        customer_id = self.request.GET.get('customer_id')
-        if customer_id is not None:
-            queryset = queryset.filter(customer_id=customer_id)
-        return queryset
+    def get(self, request, chargepoint_id):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-class CustomerViewsetDelete(ModelViewSet):
+    def post(self, request, chargepoint_id):
+        serializer = CustomerSerializer(data=request.data)
+        if serializer.is_valid():
+            customer = serializer.save()
+            customer.chargepoint = Chargepoint.objects.get(id=chargepoint_id)
+            customer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, chargepoint_id):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    serializer_class = CustomerSerializer
 
-    def get_queryset(self):
-        queryset = Customer.objects.all()
-        customer_id = self.request.GET.get('customer_id')
-        if customer_id is not None:
-            buffer = queryset.filter(customer_id=customer_id)
-            buffer.delete()
-        return queryset
+class CustomerViewsetDelete(APIView):
+
+    def get(self, request, id):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def post(self, request, id):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def delete(self, request, id):
+        data = Customer.objects.get(id=id)
+        data.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

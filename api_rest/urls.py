@@ -22,18 +22,17 @@ from chargepoints.views import ChargepointViewsetPost, CustomerViewsetPost
 from chargepoints.views import ChargepointViewsetDelete, CustomerViewsetDelete
 
 router = routers.SimpleRouter()
-# router.register('chargepoint/get', ChargepointViewsetGet, basename='chargepoint')
-# router.register('chargepoint/post', ChargepointViewsetPost, basename='chargepoint')
-# router.register('chargepoint/delete', ChargepointViewsetDelete, basename='chargepoint')
-router.register('customers/get', CustomerViewsetGet, basename='customers')
-router.register('customers/post', CustomerViewsetPost, basename='customers')
-router.register('customers/delete', CustomerViewsetDelete, basename='customers')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('', include(router.urls)),
     path('chargepoint/get/', ChargepointViewsetGet.as_view()),
+    path('chargepoint/get/<int:id>/', ChargepointViewsetGet.as_view()),
     path('chargepoint/post/', ChargepointViewsetPost.as_view()),
-    path('chargepoint/delete/<int:id>', ChargepointViewsetDelete.as_view()),
+    path('chargepoint/delete/<int:id>/', ChargepointViewsetDelete.as_view()),
+    path('customers/get/', CustomerViewsetGet.as_view()),
+    path('customers/get/<int:id>/', CustomerViewsetGet.as_view()),
+    path('customers/post/<int:chargepoint_id>/', CustomerViewsetPost.as_view()),
+    path('customers/delete/<int:id>/', CustomerViewsetDelete.as_view()),
 ]
