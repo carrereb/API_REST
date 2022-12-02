@@ -21,12 +21,9 @@ from chargepoints.views import ChargepointViewsetGet, CustomerViewsetGet
 from chargepoints.views import ChargepointViewsetPost, CustomerViewsetPost
 from chargepoints.views import ChargepointViewsetDelete, CustomerViewsetDelete
 
-router = routers.SimpleRouter()
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('', include(router.urls)),
     path('chargepoint/get/', ChargepointViewsetGet.as_view()),
     path('chargepoint/get/<int:id>/', ChargepointViewsetGet.as_view()),
     path('chargepoint/post/', ChargepointViewsetPost.as_view()),

@@ -1,5 +1,4 @@
 from chargepoints.models import Chargepoint, Customer
-from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from chargepoints.serializers import ChargepointSerializer, CustomerSerializer
