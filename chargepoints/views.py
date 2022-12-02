@@ -15,8 +15,9 @@ class ChargepointAPIView(APIView):
 class ChargepointViewsetGet(ReadOnlyModelViewSet):
 
     serializer_class = ChargepointSerializer
+    queryset = Chargepoint.objects.all()
 
-    def get_queryset(self):
+    def get(self, request, format=None):
         queryset = Chargepoint.objects.all()
 
         chargepoint_id = self.request.GET.get('chargepoint_id')
@@ -28,6 +29,15 @@ class ChargepointViewsetPost(ModelViewSet):
 
     serializer_class = ChargepointSerializer
     queryset = Chargepoint.objects.all()
+
+    def post(self, request):
+        chargepoint = Chargepoint()
+        if request.method == 'POST':
+            chargepoint.name = request.POST["name"]
+            chargepoint.number_of_chargepoint = request.POST["number_of_chargepoint"]
+            chargepoint.max_power_w = request.POST["max_power_w"]
+            chargepoint.save()
+
 
 class ChargepointViewsetDelete(ModelViewSet):
 
