@@ -3,6 +3,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from chargepoints.serializers import ChargepointSerializer, CustomerSerializer
+from rest_framework import status
 
 
 class ChargepointAPIView(APIView):
@@ -12,44 +13,45 @@ class ChargepointAPIView(APIView):
         serializer = ChargepointSerializer(chargepoints, many=True)
         return Response(serializer.data)
 
-class ChargepointViewsetGet(ReadOnlyModelViewSet):
+class ChargepointViewsetGet(APIView):
 
-    serializer_class = ChargepointSerializer
-    queryset = Chargepoint.objects.all()
-
-    def get(self, request, format=None):
-        queryset = Chargepoint.objects.all()
-
+    def get(self, request):
         chargepoint_id = self.request.GET.get('chargepoint_id')
+        data = Chargepoint.objects.all()
         if chargepoint_id is not None:
-            queryset = queryset.filter(chargepoint_id=chargepoint_id)
-        return queryset
+            data = data.filter(chargepoint_id=chargepoint_id)
+        serializer = ChargepointSerializer(data, many=True)
 
-class ChargepointViewsetPost(ModelViewSet):
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    def delete(self, request):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    serializer_class = ChargepointSerializer
-    queryset = Chargepoint.objects.all()
+class ChargepointViewsetPost(APIView):
+
+    def get(self, request):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def post(self, request):
-        chargepoint = Chargepoint()
-        if request.method == 'POST':
-            chargepoint.name = request.POST["name"]
-            chargepoint.number_of_chargepoint = request.POST["number_of_chargepoint"]
-            chargepoint.max_power_w = request.POST["max_power_w"]
-            chargepoint.save()
+        serializer = ChargepointSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-class ChargepointViewsetDelete(ModelViewSet):
+class ChargepointViewsetDelete(APIView):
 
-    serializer_class = ChargepointSerializer
-
-    def get_queryset(self):
-        queryset = Chargepoint.objects.all()
-        chargepoint_id = self.request.GET.get('chargepoint_id')
-        if chargepoint_id is not None:
-            buffer = queryset.filter(chargepoint_id=chargepoint_id)
-            buffer.delete()
-        return queryset
+    def delete(self, request, id):
+        data = Chargepoint.objects.get(id=id)
+        data.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class CustomerAPIView(APIView):
