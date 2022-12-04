@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers
 
 from chargepoints.views import ChargepointViewsetGet, CustomerViewsetGet
 from chargepoints.views import ChargepointViewsetPost, CustomerViewsetPost
