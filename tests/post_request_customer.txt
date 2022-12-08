@@ -1,5 +1,0 @@
-POST /customers/post/8/ HTTP/1.0
-Content-Type: application/json
-Content-Length: 37
-
-{"name":"Renault","total_payed":2000}

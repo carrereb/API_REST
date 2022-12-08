@@ -1,103 +1,101 @@
 from chargepoints.models import Chargepoint, Customer
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.http import HttpResponse, JsonResponse
 from chargepoints.serializers import ChargepointSerializer, CustomerSerializer
-from rest_framework import status
+from rest_framework.decorators import api_view
 
 
+@api_view(['GET'])
+def chargepoint_get_list(request):
+    if request.method != 'GET':
+        return HttpResponse("Error, wrong method", status=405)
+    data = Chargepoint.objects.all()
+    serializer = ChargepointSerializer(data, many=True)
+    return JsonResponse(serializer.data, safe=False)
 
-class ChargepointViewsetGet(APIView):
-
-    def get(self, request, id=None):
-        data = Chargepoint.objects.all()
-        if id is not None:
-            data = data.filter(id=id)
-        serializer = ChargepointSerializer(data, many=True)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    def post(self, request):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
-    def delete(self, request):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
-class ChargepointViewsetPost(APIView):
-
-    def get(self, request):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def post(self, request):
-        serializer = ChargepointSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self, request):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+@api_view(['GET'])
+def chargepoint_get_single(request, pk):
+    if request.method != 'GET':
+        return HttpResponse("Error, wrong method", status=405)
+    try:
+        data = Chargepoint.objects.get(pk=pk)  # Returns a single object that respect the condition. 
+        # If there are 0 ore more than 1, raise exceptions
+    except Chargepoint.DoesNotExist:  # Raised when there's no object
+        return HttpResponse("Object not found", status=404)  # 404 is Not Found
+    serializer = ChargepointSerializer(data)
+    return JsonResponse(serializer.data, safe=False)
 
 
-class ChargepointViewsetDelete(APIView):
+@api_view(['POST'])
+def chargepoint_post_single(request):
+    if request.method != 'POST':
+        return HttpResponse("Error, wrong method", status=405)
+    serializer = ChargepointSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return JsonResponse(serializer.data)
+    else:
+        dico = {}
+        dico["Erreur"]= True
+        return JsonResponse(serializer.data)
+    return HttpResponse(f"Error, not acceptable", status=406)
 
-    def get(self, request, id):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def post(self, request, id):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def delete(self, request, id):
-        data = Chargepoint.objects.get(id=id)
-        data.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
-class CustomerViewsetGet(APIView):
-
-    def get(self, request, id=None):
-        data = Customer.objects.all()
-        if id is not None:
-            data = data.filter(id=id)
-        serializer = CustomerSerializer(data, many=True)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    def post(self, request):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
-    def delete(self, request):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+@api_view(['DELETE'])
+def chargepoint_delete_single(request, pk):
+    if request.method != 'DELETE':
+        return HttpResponse("Error, wrong method", status=405)
+    try:
+        data = Chargepoint.objects.get(pk=pk)  # Returns a single object that respect the condition. 
+        # If there are 0 ore more than 1, raise exceptions
+    except Chargepoint.DoesNotExist:  # Raised when there's no object
+        return HttpResponse("Object not found", status=404)  # 404 is Not Found
+    data.delete()
+    return HttpResponse("Delete", status=200)
 
 
-class CustomerViewsetPost(APIView):
+@api_view(['GET'])
+def customers_get_list(request):
+    if request.method != 'GET':
+        return HttpResponse("Error, wrong method", status=405)
+    data = Customer.objects.all()
+    serializer = CustomerSerializer(data, many=True)
+    return JsonResponse(serializer.data, safe=False)
 
-    def get(self, request, chargepoint_id):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+@api_view(['GET'])
+def customers_get_single(request, pk):
+    if request.method != 'GET':
+        return HttpResponse("Error, wrong method", status=405)
+    try:
+        data = Customer.objects.get(pk=pk)  # Returns a single object that respect the condition. 
+        # If there are 0 ore more than 1, raise exceptions
+    except Customer.DoesNotExist:  # Raised when there's no object
+        return HttpResponse("Object not found", status=404)  # 404 is Not Found
+    serializer = CustomerSerializer(data)
+    return JsonResponse(serializer.data, safe=False)
 
-    def post(self, request, chargepoint_id):
-        serializer = CustomerSerializer(data=request.data)
-        if serializer.is_valid():
-            customer = serializer.save()
-            customer.chargepoint = Chargepoint.objects.get(id=chargepoint_id)
-            customer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self, request, chargepoint_id):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+@api_view(['POST'])
+def customers_post_single(request, pk):
+    if request.method != 'POST':
+        return HttpResponse("Error, wrong method", status=405)
+    serializer = CustomerSerializer(data=request.data)
+    if serializer.is_valid():
+        customer = serializer.save()
+        try:
+            customer.chargepoint = Chargepoint.objects.get(id=pk)  # Returns a single object that respect the condition. 
+            # If there are 0 ore more than 1, raise exceptions
+        except Customer.DoesNotExist:  # Raised when there's no object
+            return HttpResponse("Object not found", status=404)  # 404 is Not Found
+        customer.save()
+        return JsonResponse(serializer.data, safe=False)
+    return HttpResponse("Error, not acceptable", status=406)
 
-
-class CustomerViewsetDelete(APIView):
-
-    def get(self, request, id):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def post(self, request, id):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def delete(self, request, id):
-        data = Customer.objects.get(id=id)
-        data.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+@api_view(['DELETE'])
+def customers_delete_single(request, pk):
+    if request.method != 'DELETE':
+        return HttpResponse("Error, wrong method", status=405)
+    try:
+        data = Customer.objects.get(pk=pk)  # Returns a single object that respect the condition. 
+        # If there are 0 ore more than 1, raise exceptions
+    except Customer.DoesNotExist:  # Raised when there's no object
+        return HttpResponse("Object not found", status=404)  # 404 is Not Found
+    data.delete()
+    return HttpResponse("No content", status=204)

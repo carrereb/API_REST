@@ -1,5 +1,0 @@
-POST /chargepoint/post/ HTTP/1.0
-Content-Type: application/json
-Content-Length: 70
-
-{"name":"chargepoint_12","number_of_chargepoint":6,"max_power_w":22.1}

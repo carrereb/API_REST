@@ -1,2 +1,0 @@
-DELETE /customers/delete/14 HTTP/1.1
-
